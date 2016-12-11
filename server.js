@@ -35,6 +35,7 @@ app.post('/webhook/', function (req, res) {
           case 'หวัดดี' :
           case 'ดีจ้า' :
           sendTextMessage (sender, "HI")
+          sendGreetMessage(sender)
             break;
           default:sendTextMessage (sender, "หากต้องการเริ่มต้นใช้งาน ให้ทักทายเราว่า \"Hello\" ")
         }
@@ -47,6 +48,33 @@ app.post('/webhook/', function (req, res) {
   }
   res.sendStatus(200)
 })
+
+function sendGreetMessage(recipientId, messageText) {
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      attachment: {
+        type: "template",
+        payload: {
+          template_type: "button",
+          text : "นี้คือคู่มือสถานที่ท่องเที่ยวของคุณในปราจีนบุรี แมวมีตัวเลือกให้ข้างล่าง",
+            buttons: [{
+              type: "postback",
+              title: "🔎 หาที่เที่ยว",
+              payload: "findLocation"
+            }, {
+              type: "postback",
+              title: "👋 ไม่เป็นไร ขอบคุณ",
+              payload: "noThank"
+            }],
+        }
+      }
+    }
+  }
+  // callSendAPI(messageData);
+}
 
 function sendTextMessage (sender, text) {
   let messageData = { text: text }

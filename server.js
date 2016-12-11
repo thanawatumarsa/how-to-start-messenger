@@ -32,13 +32,20 @@ app.post('/webhook/', function (req, res) {
       }, function(error, response, body) {
         try {
           var condition = body.main;
-          sendTextMessage(sender, "วันนี้ที่ " + location + " มีอุณหภูมิ " + condition.temp + " องศาเซลเซียส");
+          sendTextMessage(sender, "วันนี้ที่ " + location + " มีอุณหภูมิ " + condition.temp + " องศาเซลเซียส")
         } catch(err) {
           console.error('error caught', err);
-          sendTextMessage(sender, "ไม่พบชื่อเมืองที่ค้นหา กรุณากรอกชื่อเมืองอีกครั้ง");
+          sendTextMessage(sender, "ไม่พบชื่อเมืองที่ค้นหา กรุณากรอกชื่อเมืองอีกครั้ง")
         }
-        continue
       })
+
+      if (text === 'Generic') {
+        sendGenericMessage(sender)
+        continue
+      }
+      var text2 = text.split(' ')
+      sendTextMessage(sender, parseInt(text2[0]) + parseInt(text2[1]) )
+    }
     if (event.postback) {
       let text = JSON.stringify(event.postback)
       sendTextMessage(sender, 'Postback received: ' + text.substring(0, 200), token)

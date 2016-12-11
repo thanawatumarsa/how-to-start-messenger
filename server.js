@@ -23,7 +23,6 @@ app.post('/webhook/', function (req, res) {
     if (event.message && event.message.text) {
       var text = event.message.text
       var apiCity = 'http://api.openweathermap.org/data/2.5/weather?q=' +text+ '&units=metric&appid=1dbb2e0928332cda13bbefb9104d13e4'
-      switch (text === "london")
       request({
         url: apiCity,
         json: true
@@ -36,8 +35,6 @@ app.post('/webhook/', function (req, res) {
           sendTextMessage(sender, "ไม่พบชื่อเมืองที่ค้นหา กรุณากรอกชื่อเมืองอีกครั้ง")
         }
       })
-      break;
-      default: sendTextMessage(sender, "นี่เอ็งต้องการอัลไลจากตรูเนี่ย - -")
     }
     if (event.postback) {
       let text = JSON.stringify(event.postback)

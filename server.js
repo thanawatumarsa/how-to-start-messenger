@@ -21,15 +21,21 @@ app.post('/webhook/', function (req, res) {
     let event = req.body.entry[0].messaging[i]
     let sender = event.sender.id
     if (event.message && event.message.text) {
-      var text = event.message.text
-
-      if (text)
-        switch (text) {
-          case 'hi' :
-          sendTextMessage(sender, "สวัสดี เราคือเพจตอบคำถามสภาพอากาศ หากต้องการใช้งาน โปรดกรอกชื่อเมืองที่ต้องการ")
-            break;
-          default: location(sender, text)
+      let text = event.message.text
+      var location = event.message.text
+      var apiUrl = 'http://api.openweathermap.org/data/2.5/weather?q=' +location+ '&units=metric&appid=ea5272e74853f242bc0efa9fef3dd9f3'
+      request({
+        url: apiUrl,
+        json: true
+      }, function(error, response, body) {
+        try {
+          var condition = body.main;
+          sendTextMessage(sender, "Today is " + condition.temp + "Celsius in " + location);
+        } catch(err) {
+          console.error('error caught', err);
+          sendTextMessage(sender, "There was an error.");
         }
+      })
     if (event.postback) {
       let text = JSON.stringify(event.postback)
       sendTextMessage(sender, 'Postback received: ' + text.substring(0, 200), token)
@@ -58,21 +64,6 @@ function sendTextMessage (sender, text) {
   })
 }
 
-function location (sender, text) {
-  var apiUrl = 'http://api.openweathermap.org/data/2.5/weather?q=' +text+ '&units=metric&appid=1dbb2e0928332cda13bbefb9104d13e4'
-  request({
-    url: apiUrl,
-    json: true
-  }, function(error, response, body) {
-    try {
-      var condition = body.main;
-      sendTextMessage(sender, "Today is " + condition.temp + "Celsius in " + text)
-    } catch(err) {
-      console.error('error caught', err)
-      sendTextMessage(sender, "There was an error.")
-    }
-  })
-}
 function sendGenericMessage (sender) {
   let messageData = {
     'attachment': {

@@ -1,3 +1,23 @@
+Skip to content
+This repository
+Search
+Pull requests
+Issues
+Gist
+ @thanawatumarsa
+ Watch 1
+  Star 0
+  Fork 19 prite36/Final5706021632065
+forked from bossbossk20/how-to-start-messenger
+ Code  Pull requests 0  Projects 0  Wiki  Pulse  Graphs
+Branch: master Find file Copy pathFinal5706021632065/server.js
+5e5ded3  24 minutes ago
+@prite36 prite36 mark4
+2 contributors @bossbossk20 @prite36
+RawBlameHistory
+129 lines (123 sloc)  4.05 KB
+'use strict'
+
 const express = require('express')
 const bodyParser = require('body-parser')
 const request = require('request')
@@ -23,9 +43,9 @@ app.post('/webhook/', function (req, res) {
     if (event.message && event.message.text) {
       let text = event.message.text
       var location = event.message.text
-      var apiUrl = 'http://api.openweathermap.org/data/2.5/weather?q=' +location+ '&units=metric&appid=ea5272e74853f242bc0efa9fef3dd9f3'
+      var weatherEndpoint = 'http://api.openweathermap.org/data/2.5/weather?q=' +location+ '&units=metric&appid=ea5272e74853f242bc0efa9fef3dd9f3'
       request({
-        url: apiUrl,
+        url: weatherEndpoint,
         json: true
       }, function(error, response, body) {
         try {
@@ -36,6 +56,14 @@ app.post('/webhook/', function (req, res) {
           sendTextMessage(sender, "There was an error.");
         }
       })
+
+      if (text === 'Generic') {
+        sendGenericMessage(sender)
+        continue
+      }
+      var text2 = text.split(' ')
+      sendTextMessage(sender, parseInt(text2[0]) + parseInt(text2[1]) )
+    }
     if (event.postback) {
       let text = JSON.stringify(event.postback)
       sendTextMessage(sender, 'Postback received: ' + text.substring(0, 200), token)
@@ -116,3 +144,5 @@ function sendGenericMessage (sender) {
 app.listen(app.get('port'), function () {
   console.log('running on port', app.get('port'))
 })
+Contact GitHub API Training Shop Blog About
+© 2016 GitHub, Inc. Terms Privacy Security Status Help

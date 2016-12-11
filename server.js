@@ -1,21 +1,3 @@
-Skip to content
-This repository
-Search
-Pull requests
-Issues
-Gist
- @thanawatumarsa
- Watch 1
-  Star 0
-  Fork 19 prite36/Final5706021632065
-forked from bossbossk20/how-to-start-messenger
- Code  Pull requests 0  Projects 0  Wiki  Pulse  Graphs
-Branch: master Find file Copy pathFinal5706021632065/server.js
-5e5ded3  24 minutes ago
-@prite36 prite36 mark4
-2 contributors @bossbossk20 @prite36
-RawBlameHistory
-129 lines (123 sloc)  4.05 KB
 'use strict'
 
 const express = require('express')
@@ -144,5 +126,3 @@ function sendGenericMessage (sender) {
 app.listen(app.get('port'), function () {
   console.log('running on port', app.get('port'))
 })
-Contact GitHub API Training Shop Blog About
-© 2016 GitHub, Inc. Terms Privacy Security Status Help

@@ -22,9 +22,11 @@ app.post('/webhook/', function (req, res) {
   for (let i = 0; i < messaging_events.length; i++) {
     let event = req.body.entry[0].messaging[i]
     let sender = event.sender.id
+    let text = event.message.text
+    let messageAttachments = event.message.attachments
 
-    if (messageText) {
-     switch (messageText) {
+    if (text) {
+     switch (text) {
       case 'HELLO':
       case 'hello':
       case 'Hello':
@@ -35,7 +37,7 @@ app.post('/webhook/', function (req, res) {
       break;
       case 'ขอบคุณ' :
       case 'ขอบใจ' :
-      sendTextMessage(senderID, "ยินดีช่วยเหมียวว <3");
+      sendTextMessage(sender, "ยินดีช่วยเหมียวว <3");
       break;
       case 'สัส' :
       case 'ควย' :
@@ -44,19 +46,19 @@ app.post('/webhook/', function (req, res) {
       case 'พ่อมึงตาย' :
       case 'แม่งตาย' :
       case 'แม่งตาย' :
-      sendTextMessage(senderID, " 👎 สุภาพหน่อย ");
+      sendTextMessage(sender, " 👎 สุภาพหน่อย ");
       break;
       case 'กาก' :
       case 'ควาย' :
-      sendTextMessage(senderID, "เดะหน้าเป็นรอยหรอก 😾");
+      sendTextMessage(sender, "เดะหน้าเป็นรอยหรอก 😾");
       break
       default:
-      sendTextMessage(senderID, "พิมพ์อะไรแมวไม่รู้เรื่อง :p \n เลือกเมนูเอาข้างล่างละกัน " );
-      sendGreetMessage(senderID)
+      sendTextMessage(sender, "พิมพ์อะไรแมวไม่รู้เรื่อง :p \n เลือกเมนูเอาข้างล่างละกัน " );
+      sendGreetMessage(sender)
       }
     }
     else if (messageAttachments) {
-      sendTextMessage(senderID, "จุ๊บๆ");
+      sendTextMessage(sender, "จุ๊บๆ");
     }
   res.sendStatus(200)
 })

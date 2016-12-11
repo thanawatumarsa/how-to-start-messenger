@@ -38,13 +38,6 @@ app.post('/webhook/', function (req, res) {
           sendTextMessage(sender, "ไม่พบชื่อเมืองที่ค้นหา กรุณากรอกชื่อเมืองอีกครั้ง")
         }
       })
-
-      if (text === 'Generic') {
-        sendGenericMessage(sender)
-        continue
-      }
-      var text2 = text.split(' ')
-      sendTextMessage(sender, parseInt(text2[0]) + parseInt(text2[1]) )
     }
     if (event.postback) {
       let text = JSON.stringify(event.postback)

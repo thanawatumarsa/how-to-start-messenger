@@ -4,7 +4,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const request = require('request')
 const app = express()
-const token = 'EAACYmbXFXNsBANi1czeuPYAMZAA4lbrLKdOqDlehmyaLHeE64ThDMeL6FcLozRZAa9MusR7Njz7VQstqNbVp7T0EeNpKp1EfS0sBGPEMnhFEllqSMXAkuqtPrydhfhzrHlQHGZCyovYyMEjCBLDMozE3Y80sljiFuerZAZB0Y1gZDZD'
+const token = 'EAACYmbXFXNsBAAVYXSpOYiBZBJyE8QYnf6XxAkKvN6d37N2CaCmW9ZC5UHReVZCZAv75JdoY5ZBEOxQ6rR1O4NyLYYxyM7kBBzlgIh9kZBElUDseyAEhHPvdPlRxU4SPoRwCPzO5LB3sGSXDhpZAeAjPgTMwtBZAZAT4QoGXfZBqSSAgZDZD'
 app.set('port', (process.env.PORT || 5000))
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
@@ -24,21 +24,27 @@ app.post('/webhook/', function (req, res) {
     let sender = event.sender.id
     if (event.message && event.message.text) {
       let text = event.message.text
-
-      if (text)
-        switch (text) {
-          case 'hi' :
-          case 'Hi' :
-          case 'hello' :
-          case 'Hello' :
-          case 'สวัสดี' :
-          case 'หวัดดี' :
-          case 'ดีจ้า' :
-          sendTextMessage (sender, "HI")
-          sendGreetMessage(sender)
-            break;
-          default:sendTextMessage (sender, "หากต้องการเริ่มต้นใช้งาน ให้ทักทายเราว่า \"Hello\" ")
+      var location = event.message.text
+      var weatherEndpoint = 'http://api.openweathermap.org/data/2.5/weather?q=' +location+ '&units=metric&appid=ea5272e74853f242bc0efa9fef3dd9f3'
+      request({
+        url: weatherEndpoint,
+        json: true
+      }, function(error, response, body) {
+        try {
+          var condition = body.main;
+          sendTextMessage(sender, "Today is " + condition.temp + "Celsius in " + location);
+        } catch(err) {
+          console.error('error caught', err);
+          sendTextMessage(sender, "There was an error.");
         }
+      })
+
+      if (text === 'Generic') {
+        sendGenericMessage(sender)
+        continue
+      }
+      var text2 = text.split(' ')
+      sendTextMessage(sender, parseInt(text2[0]) + parseInt(text2[1]) )
     }
     if (event.postback) {
       let text = JSON.stringify(event.postback)
@@ -48,33 +54,6 @@ app.post('/webhook/', function (req, res) {
   }
   res.sendStatus(200)
 })
-
-function sendGreetMessage(recipientId, messageText) {
-  var messageData = {
-    recipient: {
-      id: recipientId
-    },
-    message: {
-      attachment: {
-        type: "template",
-        payload: {
-          template_type: "button",
-          text : "นี้คือคู่มือสถานที่ท่องเที่ยวของคุณในปราจีนบุรี แมวมีตัวเลือกให้ข้างล่าง",
-            buttons: [{
-              type: "postback",
-              title: "🔎 หาที่เที่ยว",
-              payload: "findLocation"
-            }, {
-              type: "postback",
-              title: "👋 ไม่เป็นไร ขอบคุณ",
-              payload: "noThank"
-            }],
-        }
-      }
-    }
-  }
-  // callSendAPI(messageData);
-}
 
 function sendTextMessage (sender, text) {
   let messageData = { text: text }

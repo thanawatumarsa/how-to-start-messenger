@@ -36,7 +36,7 @@ app.post('/webhook/', function (req, res) {
           case 'ดีจ้า' :
           sendTextMessage (sender, "HI")
             break;
-          default:sendTextMessage (sender, "What")
+          default:sendTextMessage (sender, "หากต้องการเริ่มต้นใช้งาน ให้ทักทายเราว่า \"Hello\" ")
         }
     }
     if (event.postback) {

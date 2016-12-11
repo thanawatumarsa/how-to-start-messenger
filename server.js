@@ -22,44 +22,20 @@ app.post('/webhook/', function (req, res) {
   for (let i = 0; i < messaging_events.length; i++) {
     let event = req.body.entry[0].messaging[i]
     let sender = event.sender.id
-    let text = event.message.text
-    let messageAttachments = event.message.attachments
-
-    if (text) {
-     switch (text) {
-      case 'HELLO':
-      case 'hello':
-      case 'Hello':
-      case 'ดีจ้า':
-      case 'สวัสดี':
-      case 'หวัดดี':
-      sendTextMessage(sender, "สวัสดี");
-      break;
-      case 'ขอบคุณ' :
-      case 'ขอบใจ' :
-      sendTextMessage(sender, "ยินดีช่วยเหมียวว <3");
-      break;
-      case 'สัส' :
-      case 'ควย' :
-      case 'ฟวย' :
-      case 'พ่องตาย' :
-      case 'พ่อมึงตาย' :
-      case 'แม่งตาย' :
-      case 'แม่งตาย' :
-      sendTextMessage(sender, " 👎 สุภาพหน่อย ");
-      break;
-      case 'กาก' :
-      case 'ควาย' :
-      sendTextMessage(sender, "เดะหน้าเป็นรอยหรอก 😾");
-      break
-      default:
-      sendTextMessage(sender, "พิมพ์อะไรแมวไม่รู้เรื่อง :p \n เลือกเมนูเอาข้างล่างละกัน " );
-      sendGreetMessage(sender)
+    if (event.message && event.message.text) {
+      let text = event.message.text
+      if (text === 'Generic') {
+        sendGenericMessage(sender)
+        continue
       }
+      sendTextMessage(sender, 'Text received, echo: ' + text.substring(0, 200))
     }
-    else if (messageAttachments) {
-      sendTextMessage(sender, "จุ๊บๆ");
+    if (event.postback) {
+      let text = JSON.stringify(event.postback)
+      sendTextMessage(sender, 'Postback received: ' + text.substring(0, 200), token)
+      continue
     }
+  }
   res.sendStatus(200)
 })
 

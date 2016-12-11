@@ -23,16 +23,15 @@ app.post('/webhook/', function (req, res) {
     let event = req.body.entry[0].messaging[i]
     let sender = event.sender.id
     if (event.message && event.message.text) {
-      let text = event.message.text
-      var location = event.message.text
-      var weatherEndpoint = 'http://api.openweathermap.org/data/2.5/weather?q=' +location+ '&units=metric&appid=1dbb2e0928332cda13bbefb9104d13e4'
+      var text = event.message.text
+      var apiCity = 'http://api.openweathermap.org/data/2.5/weather?q=' +text+ '&units=metric&appid=1dbb2e0928332cda13bbefb9104d13e4'
       request({
-        url: weatherEndpoint,
+        url: apiCity,
         json: true
       }, function(error, response, body) {
         try {
           var condition = body.main;
-          sendTextMessage(sender, "วันนี้ที่ " + location + " มีอุณหภูมิ " + condition.temp + " องศาเซลเซียส")
+          sendTextMessage(sender, "วันนี้ที่ " + text + " มีอุณหภูมิ " + condition.temp + " องศาเซลเซียส")
         } catch(err) {
           console.error('error caught', err);
           sendTextMessage(sender, "ไม่พบชื่อเมืองที่ค้นหา กรุณากรอกชื่อเมืองอีกครั้ง")
